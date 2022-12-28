@@ -23,4 +23,7 @@ provider "azurerm" {
 resource "azurerm_resource_group" "demo-rg" {
   name     = "DemoRG"
   location = "South Africa North"
+  tags     = {
+    environment = prod
+  }
 }
