@@ -1,12 +1,10 @@
 
-name: 'terraform-Azure'
+name: 'tf deploy to azure'
 
 on:
   push:
     branches:
       - main
-    paths:
-      - "/actions/terraform-Azure/*"
   pull_request:
     branches:
       - main
@@ -18,7 +16,7 @@ defaults:
   run:
     shell: bash
 env: 
-  ROOT_PATH: '${{github.workspace}}/actions/terraform-Azure'
+  ROOT_PATH: '${{github.workspace}}/src/terraform'
   ARM_CLIENT_ID: ${{secrets.AZURE_CLIENT_ID}}
   ARM_CLIENT_SECRET: ${{secrets.AZURE_CLIENT_SECRET}}
   ARM_SUBSCRIPTION_ID: ${{secrets.AZURE_SUBSCRIPTION_ID}}
@@ -41,11 +39,11 @@ jobs:
   
     - name: terraform init
       run: terraform init
-      working-directory: ${{ env.ROOT_PATH }}
+      working-directory: ${{env.ROOT_PATH}}
 
     - name: terraform Plan
       run: terraform plan 
-      working-directory: ${{ env.ROOT_PATH }}
+      working-directory: ${{env.ROOT_PATH}}
       
 
   terraform_apply:
@@ -65,7 +63,7 @@ jobs:
     - name: Setup terraform
       uses: hashicorp/setup-terraform@v1
       with:
-        cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+        cli_config_credentials_token: ${{secrets.TF_API_TOKEN}}
  
     - name: terraform Init
       run: terraform init
@@ -73,13 +71,13 @@ jobs:
 
     - name: terraform Init
       run: echo 'var -> ${{inputs.tf_destroy}}'
-      working-directory: ${{ env.ROOT_PATH }}
+      working-directory: ${{env.ROOT_PATH}}
 
       #github.ref == 'refs/heads/main' && github.event_name == 'push'
     - name: terraform Apply
       run: terraform apply -auto-approve
       if: ${{inputs.tf_destroy}} == false
-      working-directory: ${{ env.ROOT_PATH }}
+      working-directory: ${{env.ROOT_PATH}}
 
     # - name: terraform destroy
     #  run: terraform destroy -auto-approve
